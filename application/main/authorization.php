@@ -1,23 +1,34 @@
 <?php
 session_start();
+include '../utility/ChromePhp.php';
 include "../../library/config.php";
 require_once("../model/dbconn.php");
 require_once("../model/pos.php");
 
+
+
 $username = $_POST['username'];
 $password = $_POST['password'];
+
+ChromePhp::info('Username:'.$password);
+
 if (empty($username) && empty($password)) {
+	
 	header('location:login.php?error=1');
-	break;
+	//break;
 } else if (empty($username)) {
 	header('location:login.php?error=2');
-	break;
+	//break;
 } else if (empty($password)) {
 	header('location:login.php?error=3');
-	break;
+	//break;
 }
+
+
 $sv = new pos();
 $data = $sv->getLogin($username,$password);
+
+ChromePhp::log('Testing Testing 2'.$data[0].' ==>'.$data[0]);
 if ($data[2] == 1) 
 {
 	$_SESSION['pos_username'] = $username;
@@ -31,6 +42,7 @@ if ($data[2] == 1)
 }
 else
 {
+	
 	header('location:login.php?error=4');
 }
 ?>

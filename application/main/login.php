@@ -1,4 +1,5 @@
 <?php include "../../library/config.php" ?>
+<?php include "../utility/ChromePhp.php" ?>
 <?php $titlepage="Login Form System"; ?>
 <?php include "../layout/top-header.php"; //header template ?> 
 <body class="hold-transition login-page">
@@ -32,6 +33,7 @@
           <?php
           if (!empty($_GET['error'])) 
           {
+            
             if ($_GET['error'] == 1) 
             {
               echo 'Please fill out username or password';

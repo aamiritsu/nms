@@ -7,6 +7,8 @@ include "../layout/top-header.php";
 include "../../library/check_login.php";
 
 include "../layout/header.php"; 
+
+//$connector = PhpConsole\Connector::getInstance();
 ?>
 <section style="margin-bottom:10px;" class="content-header">
 	<h1>
