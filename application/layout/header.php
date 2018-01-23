@@ -8,7 +8,7 @@
           <div class="navbar-header">
             <a href="<?php echo $sitename.'application/main/index.php';?>" class="navbar-brand">
              <span class="logo-mini"> 
-              <b>Seegate</b>site
+              <b>NMS</b> & Pharmacy
             </span>
           </a>
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
@@ -22,6 +22,7 @@
             $sv = new pos(); 
             $data = $sv->getMenu();
             $key = $data[1];
+
             ?>
             <?php 
             foreach($key as $menu) 
@@ -29,7 +30,9 @@
               $idmenux=$menu['id_menu'];
               $id_menu=$menu['id_menu'];
               $query_sub_menu =  $sv->getSubMenu($id_menu);
-              $jumlah_submenu = count($query_sub_menu[1]); 
+              $jumlah_submenu = count($query_sub_menu[1]);
+              
+
               if($jumlah_submenu > 0){
                 $cekmenuz=0;
                 /*--------------------*/
@@ -43,7 +46,7 @@
                 }
               } 
               /*--------------------*/
-
+              
 
             }
             if($cekmenuz >0)
