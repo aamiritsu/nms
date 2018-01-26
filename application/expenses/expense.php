@@ -15,10 +15,10 @@ include "../layout/header.php"; ?>
       <h3 class="box-title">Expenses Sheet</h3>
     </div><!--./ box header-->
     <div class="box-body">
-      <button type="submit" class="btn btn-primary " id="btnAddExpense" name="btnAddExpense"><i class="fa fa-plus"></i> Add Expense</button>
+      <button type="submit" class="btn btn-primary " id="btnOpenAddExpenseModal" name="btnOpenAddExpenseModal"><i class="fa fa-plus"></i> Add Expense</button>
       <br>
       <div class="box-body table-responsive no-padding">
-        <table id="table_user" class="table  table-bordered table-hover ">
+        <table id="table_expense" class="table  table-bordered table-hover ">
           <thead>
             <tr class="tableheader">
               <th style="width:5%">#</th>
@@ -31,21 +31,7 @@ include "../layout/header.php"; ?>
               
             </tr>
           </thead>
-          <tbody>
-              <td>1</td>
-              <td>Electricity</td>
-              <td>1125</td>
-              <td>Monthly Electricity bill for june 2017</td>
-              <td>25-06-2017 15:29:27</td>
-              <td>Ramzan</td>
-              <td>
-                <button type="submit" class="btn btn-success " id="btnViewExpense" name="btnViewExpense" title="View Expense"><i class="fa fa-eye"></i></button>
-                <button type="submit" class="btn btn-primary " id="btnEditExpense" name="btnEditExpense" title="Edit Expense"><i class="fa fa-pencil"></i></button>
-                <button type="submit" class="btn btn-danger " id="btnDeleteExpense" name="btnDeleteExpense" title="Delete Expense"><i class="fa fa-trash"></i></button>
-
-              </td>
-
-          </tbody>
+          <tbody></tbody>
         </table>
       </div>
     </div>
@@ -56,85 +42,55 @@ include "../layout/header.php"; ?>
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">×</button>
-        <h4 class="modal-title">Master user Form</h4>
+        <h4 class="modal-title">Add Expense Form</h4>
       </div>
       <!--modal header-->
       <div class="modal-body">
+        <form id="formNewExpense">
         <div class="form-horizontal">
           <div class="box-body">
             <div class="form-group">
-              <label class="col-sm-2  control-label">Username</label>
-              <div class="col-sm-6">
-                <input type="text" class="form-control text-uppercase" id="txtusername" name="" value="" placeholder="">
-                <input type="hidden" id="txtiduser" name="inputcrud" class="" value="0">
-                <input type="hidden" id="inputcrud" name="inputcrud" class="" value="N">
-                <input type="hidden" id="hmenu" name="" class="" value=""> </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-2  control-label">Password</label>
-                <div class="col-sm-6">
-                  <input type="password" class="form-control " id="txtpass" name="" value="" placeholder=""> </div>
-                </div>
-              </div>
+              <label for="ddExpenseType" class="col-sm-2 control-label">Expense Type</label>
+              <div class="col-sm-10">
+                <select class="form-control" id="ddExpenseType">
+                  <?php
+                    $pos = new pos();
+                    $dbExpenseTypes = $pos->getExpenseTypes();
+                    foreach ($dbExpenseTypes[1] as $key) {
+                        echo "<option value='".$key['name']."'>".$key['name']." </option>";
+                    }
+                  ?>
+                </select>
+               </div> 
             </div>
-            <!--form menuk-->
-            <?php
-            $pos = new pos();
-            $mymenu = $pos->getMenu();
-            $num=1;
-            $menuku='';
-            foreach ($mymenu[1] as $key) {
-              if($num==1)
-              {
-                $menuku .= '<div class="row" >';
-                $menuku .= '<div class="col-xs-6" style="padding-left:0px"><h4>'.$key['name_menu'].'</h4>';
-                $submenuk = $pos->getSubMenu($key['id_menu']);
-                $menuku .= '<ul class="list-group">'; 
-                foreach ($submenuk[1] as $keys) {
-                  $menuku .= '<li class="list-group-item">
-                  <input type="checkbox"  id="check-'.$keys["id_sub_menu"].'" class="chkbox" value="'.$keys['id_sub_menu'].'" > <strong>'.$keys['name_sub_menu'].'</strong>
-                  </li>'; 
-                }
-                $menuku .= '</ul>'; 
-                $menuku .= '</div>';
-              }else{
-                $menuku .= '<div class="col-xs-6" style="padding-left:0px"><h4>'.$key['name_menu'].'</h4>';
-                $submenuk = $pos->getSubMenu($key['id_menu']);
-                $menuku .= '<ul class="list-group">'; 
-                foreach ($submenuk[1] as $keys) {
-                  $menuku .= '<li class="list-group-item"><input type="checkbox" id="check-'.$keys["id_sub_menu"].'" class="chkbox" value="'.$keys['id_sub_menu'].'" > <strong>'.$keys['name_sub_menu'].'</strong></li>'; 
-                }
-                $menuku .= '</ul>';
-                $menuku .= '</div>';
-                $menuku .= '</div>';
-                $num=0;
-              }
-              $num++;
-            }
-            ?>
-            <div class="form-horizontal menuk" >
+           
+            <div class="form-horizontal " >
               <div class="box-body">
-                <div class="form-group">  
-                  <label class="col-sm-2  control-label">Menu Access</label> 
-                  <div class="col-xs-10">
-                    <div>
-                      <input type="checkbox" id="check-all" class="txtcheckbox2"> <b>Selected All</b>
-                    </div>
-                    <?php echo $menuku; ?>
-                  </div> 
+                <div class="form-group">
+                  <label for="txtExpenseAmount" class="col-sm-2 control-label">Amount</label>
+                  <div class="col-sm-10">
+                    <input type="number" class="form-control" id="txtExpenseAmount" placeholder="Amount">
+                  </div>
                 </div>
+                <div class="form-group">
+                  <label for="txtExpenseDescription" class="col-sm-2 control-label">Description</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="txtExpenseDescription" placeholder="Description">
+                  </div>
+                </div>
+
+               <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <input type="hidden" id="eid" name="eid" class="" value="">
+                  <input type="hidden" id="inputcrud" name="inputcrud" class="" value="C">
+                  <button type="Reset" class="btn btn-default"><i class="fa fa-refresh"></i> Reset</button>
+                  <button type="submit" class="btn btn-primary" id="btnAddEditExpense"><i class="fa fa-save"></i> Submit</button>
+                </div>
+              </div>
+
               </div>
             </div> 
-            <div class="form-horizontal">
-              <div class="box-body">
-                <div class="form-group">   
-                  <label class="col-sm-2  control-label"></label>
-                  <div class="col-sm-6">
-                    <button type="submit" class="btn btn-primary " id="btnsaveuser" name="btnsaveuser"><i class="fa fa-save"></i> Save</button>
-                  </div>  
-                </div>
-              </div>
-            </div>
+
             <!--end form menuk-->
           </div>
           <div class="modal-footer">
@@ -142,6 +98,7 @@ include "../layout/header.php"; ?>
           </div>
           <!--modal footer-->
         </div>
+      </form>
         <!--modal-content-->
       </div>
       <!--modal-dialog modal-lg-->

@@ -826,6 +826,154 @@ public function getSaleDetailIdSale($id)
   /******************************************************************************
     END OF MENU CODE
   *******************************************************************************/
+
+ /******************************************************************************
+    START OF Amir's Custom Code
+ *******************************************************************************/
+    public function getExpenseTypes()
+    {
+      $db = $this->dblocal;
+      try
+      {
+        $stmt = $db->prepare("select * from r_expense_type where is_active = true order by display_order ");
+        $stmt->execute();
+        $stat[0] = true;
+        $stat[1] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stat;
+      }
+      catch(PDOException $ex)
+      {
+        $stat[0] = false;
+        $stat[1] = $ex->getMessage();
+        return $stat;
+      }
+    }
+
+
+
+  public function addExpense($eType,$eAmount,$eDesc,$eIsActive,$eCreatedOn,$eCreatedBy)
+  {
+    $db = $this->dblocal;
+    try
+    {
+      $stmt = $db->prepare("insert into t_expense(amount,etype,description,is_active,created_by,created_on)
+        values(:pamount,:petype,:pdescription,:pis_active,:pcreated_by,:pcreated_on)");
+
+      $stmt->bindParam("petype",$eType);
+      $stmt->bindParam("pamount",$eAmount);
+      $stmt->bindParam("pdescription",$eDesc);
+      $stmt->bindParam("pis_active",$eIsActive);
+      $stmt->bindParam("pcreated_by",$eCreatedBy);
+      $stmt->bindParam("pcreated_on",$eCreatedOn);
+      
+
+      $stmt->execute();
+      $stat[0] = true;
+      $stat[1] = "Success save!";
+      return $stat;
+    }
+    catch(PDOException $ex)
+    {
+      $stat[0] = false;
+      $stat[1] = $ex->getMessage();
+      return $stat;
+    }
   }
 
+
+  public function updateExpense($ExpenseId,$eType,$eAmount,$eDesc,$eIsActive,$eCreatedOn,$eCreatedBy)
+  {
+    $db = $this->dblocal;
+    try
+    {
+      $stmt = $db->prepare("update t_expense set amount = :pamount, etype = :petype, description = :pdescription, updated_by = :pcreated_by, updated_on = :pcreated_on where id = :id");
+
+      $stmt->bindParam("id",$ExpenseId);
+      $stmt->bindParam("petype",$eType);
+      $stmt->bindParam("pamount",$eAmount);
+      $stmt->bindParam("pdescription",$eDesc);
+      /*$stmt->bindParam("pis_active",$eIsActive);*/
+      $stmt->bindParam("pcreated_by",$eCreatedBy);
+      $stmt->bindParam("pcreated_on",$eCreatedOn);
+      $stmt->execute();
+      $stat[0] = true;
+      $stat[1] = "Success update!";
+      return $stat;
+    }
+    catch(PDOException $ex)
+    {
+      $stat[0] = false;
+      $stat[1] = $ex->getMessage();
+      return $stat;
+    }
+  }
+
+  public function deleteExpense($p_id)
+  {
+    $db = $this->dblocal;
+    try
+    {
+      $stmt = $db->prepare("delete from t_expense  where id = :id");
+
+      $stmt->bindParam("id",$p_id);
+      $stmt->execute();
+      $stat[0] = true;
+      $stat[1] = "Succes Delete!";
+      return $stat;
+    }
+    catch(PDOException $ex)
+    {
+      $stat[0] = false;
+      $stat[1] = $ex->getMessage();
+      return $stat;
+    }
+  }
+
+
+/*********************query for list of all expenses*********************/
+  public function getListExpense()
+  {
+    $db = $this->dblocal;
+    try
+    {
+      $stmt = $db->prepare("select * from t_expense where is_active='1' order by created_on desc");
+      $stmt->execute();
+      $stat[0] = true;
+      $stat[1] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      return $stat;
+    }
+    catch(PDOException $ex)
+    {
+      $stat[0] = false;
+      $stat[1] = $ex->getMessage();
+      return $stat;
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  } // end of class
   ?>

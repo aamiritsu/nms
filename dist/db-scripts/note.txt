@@ -1,0 +1,3 @@
+dont forget to change database username and password in dbconn.php (pos/application/model/dbconn.php)
+
+http://seegatesite.com

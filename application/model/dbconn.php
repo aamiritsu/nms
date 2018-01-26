@@ -1,8 +1,8 @@
 <?php
 
 
-$dbuserx='pos';
-$dbpassx='123456';
+$dbuserx='root';
+$dbpassx='';
 
 class dbconn {
 	public $dblocal;
