@@ -62,7 +62,16 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
 		}
 		$datax = array('data' => $data);
 		echo json_encode($datax);
-	} else {
+	}
+	else if($method == 'getExpensesForChart'){
+		$ExpenseCreatedBy= 'Ramzan';//strtoupper($_POST['ExpenseCreatedBy']);
+		$pos = new pos();
+		$array = $pos->getUserExpenseForChart($ExpenseCreatedBy);
+		$data = $array[1];
+
+		echo json_encode($data);
+	}
+	 else {
 		exit('No direct access allowed.');
 	}
 }

@@ -1,3 +1,4 @@
+   
 
 $(document).ready( function () 
 {
@@ -29,17 +30,24 @@ $(document).ready( function ()
     { "data": "buttons" },
     ]
   });
+
+
+	$(document).on( "click","#btnOpenAddExpenseModal", function() {
+	  
+	  $("#btnAddExpense").text("Add");	
+	  $("#txtExpenseAmount").val("");
+	  $("#txtExpenseDescription").val("");
+	  $("#modalAddExpense").modal('show');
+	  set_focus("#txtExpenseAmount");
+	});
+
+
 });
 
 
-$(document).on( "click","#btnOpenAddExpenseModal", function() {
-  
-  $("#btnAddExpense").text("Add");	
-  $("#txtExpenseAmount").val("");
-  $("#txtExpenseDescription").val("");
-  $("#modalAddExpense").modal('show');
-  set_focus("#txtExpenseAmount");
-});
+
+
+
 
 
 
@@ -158,6 +166,7 @@ $(document).on( "click","#btnAddEditExpense", function() {
 
 
 
+
 $(document).on( "click",".btneditexpense", function() {
  
   var p_id = $(this).attr("p_id");
@@ -228,3 +237,29 @@ $(document).on( "click",".btndeleteexpense", function() {
       });
     });
 });
+
+function getExpensesForChart(){
+	var chart = Morris.Bar({
+	    // ID of the element in which to draw the chart.
+	    element: 'chart-container',
+	    data: [0,0], // Set initial data (ideally you would provide an array of default data)
+	    xkey: ['type'], // Set the key for X-axis
+	    ykeys: ['amount'], // Set the key for Y-axis
+	    labels: ['Amount']
+	    
+  	});
+
+	var value = { method : "getExpensesForChart", };
+	$.ajax({
+	    url : "c_expense.php",
+	    type: "POST",
+	    data : value,
+	    success: function(data, textStatus, jqXHR)
+	    {
+	    	var data = jQuery.parseJSON(data);
+	    	chart.setData(data);
+	    },
+	    error: function(jqXHR, textStatus, errorThrown)
+	    { console.log("Error while fetching expneses for chart"); return;}
+	});
+}

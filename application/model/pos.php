@@ -291,6 +291,19 @@ public function updateTempSaleQty($cashier,$uniqid,$id_item ,$value)
   $db = $this->dblocal;
   try
   {
+    $stmtPreCheck = $db->prepare("select stock from m_item where id_item= :id_item ");
+    $stmtPreCheck->bindParam("id_item",$id_item);
+    $stmtPreCheck->execute();
+
+    $arrayOfStock = $stmtPreCheck->fetch(PDO::FETCH_ASSOC);
+    $stat[0] = true;
+    $stat[1] = $arrayOfStock;
+    if ($arrayOfStock['stock'] < $value){
+        throw new PDOException("Quantity Does not exist in stock. Available Stock is =".$arrayOfStock['stock'], 1);
+        return $stat;
+    }
+
+
     $stmt = $db->prepare("update temp_sale set qty= :value where uniqid= :uniqid and id_user = :cashier 
       and id_item = :id_item ");
 
@@ -937,6 +950,30 @@ public function getSaleDetailIdSale($id)
     try
     {
       $stmt = $db->prepare("select * from t_expense where is_active='1' order by created_on desc");
+      $stmt->execute();
+      $stat[0] = true;
+      $stat[1] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      return $stat;
+    }
+    catch(PDOException $ex)
+    {
+      $stat[0] = false;
+      $stat[1] = $ex->getMessage();
+      return $stat;
+    }
+  }
+
+
+
+  public function getUserExpenseForChart($createdBy)
+  {
+    $db = $this->dblocal;
+    try
+    {
+      $stmt = $db->prepare("select SUM(amount) as amount,DATE(created_on) AS date, etype as type from t_expense where created_by = :createdBy AND is_active='1'  group by created_on,etype");
+
+      $stmt->bindParam("createdBy",$createdBy);
+
       $stmt->execute();
       $stat[0] = true;
       $stat[1] = $stmt->fetchAll(PDO::FETCH_ASSOC);

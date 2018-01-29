@@ -34,8 +34,13 @@ include "../layout/header.php"; ?>
           <tbody></tbody>
         </table>
       </div>
-    </div>
+     </div>
   </div><!-- /.box -->
+  <div id="divChartBtn">
+    <button type="submit" class="btn btn-primary " id="btnDisplayChart" name="btnDisplayChart" onclick="getExpensesForChart();"><i class="fa fa-bar-chart"></i> Show Chart</button>
+  </div>
+  <div id="chart-container" style="width: 25%"></div>
+
 </section><!-- /.content -->
 <div id="modalAddExpense" class="modal fade ">
   <div class="modal-dialog modal-lg">
