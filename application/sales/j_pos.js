@@ -130,6 +130,7 @@ $(document).on("click",".btndeletesale",function(){
 	$("#txthidetrxid").val($(this).attr("sale_id"));
 	$("#txthiddentrans").val("D");
 	$("#notepassword").html("Please enter user password to delete transaction!");
+
 	set_focus("#txtpass");
 });
 
@@ -406,6 +407,7 @@ $(document).on("click",".btndelete",function(){
 	});
 });
 
+
 $(document).on("click",".editparam",function(){
 	var dataparam=$(this).attr("dataparam");
 	var datatitle=$(this).attr("datatitle");
@@ -500,6 +502,8 @@ function refresh_total(){
 			var discrp = cleanString($("#txttotaldiscrp").val());
 			var total =addCommas(subtotal - discrp);
 			$("#txttotal").html(total);
+			$("#txtCashPaid").val("0");
+			$("#spnBalance").text("0");
 		},
 		error: function(jqXHR, textStatus, errorThrown)
 		{
@@ -538,6 +542,9 @@ function reset_data(){
 				$("#txtsubtotal").val(0);
 				$("#txttotal").html("0");
 				$("#txtnote").val("");
+				$("#txtCashPaid").val("");
+				$("#spnBalance").text("0");
+				
 				refresh_total();
 				set_focus("#txtsearchitem");
 			}else{
@@ -625,4 +632,114 @@ function init_data(){
 	refresh_total();
 	set_focus("#txtsearchitem");
 	newkdtrans();
+}
+
+function editQtyParam(ele){
+	
+	_this = $(ele);
+	let dataparam=_this.attr("dataparam");
+	let datatitle=_this.attr("datatitle");
+	let val=_this.val();
+	let key = _this.attr("key");
+
+ 	if (/\D/g.test(val))
+  	{
+  		// Filter non-digits from input value.
+    	_this.val('1') ;
+  	}else
+  	{
+  		if (val <=0)
+  		{
+  			$.notify({message: "Quantity can not be ZERO or below"		},
+  				{
+					type: 'warning',
+					autoHide: true,
+					autoHideDelay: 500,
+				}
+			);
+
+  		}
+
+  		updateQtyInUI(ele);
+  	}
+}
+
+function updateQtyInUI(ele) {
+
+	_this = $(ele);
+	let jenis=_this.attr("dataparam");
+	let datatitle=_this.attr("datatitle");
+	let nilai =_this.val();
+	let key = _this.attr("key");
+	
+
+	var value = {
+		nilai: nilai,
+		jenis:jenis,
+		key:key,
+		method : "updatedetail"
+	};
+	$.ajax(
+	{
+		url : "c_pos.php",
+		type: "POST",
+		data : value,
+		success: function(data, textStatus, jqXHR)
+		{
+			var data = jQuery.parseJSON(data);
+			if(data.result ==1){
+				var table = $('#table_transaction').DataTable(); 
+				table.ajax.reload( null, false );
+				$( "#modaleditparam" ).modal("hide");
+				refresh_total();
+			}else{
+				$.notify({
+					message: "Error edit , error :"+data.error
+				},{
+					type: 'danger',
+					delay: 10000,
+				});		
+			}
+
+		},
+		error: function(jqXHR, textStatus, errorThrown)
+		{
+			
+		}
+	});
+}
+
+
+
+function calculateBalanceAgainstCashPaid(){
+	
+	_this = $("#txtCashPaid");
+	let val=_this.val();
+	
+ 	if (/\D/g.test(val))
+  	{
+  		// Filter non-digits from input value.
+    	_this.val('0') ;
+  	}else
+  	{
+  		if (val < 0)
+  		{
+  			$.notify({message: "Cash paid can not be less than ZERO"},
+  				{
+					type: 'warning',
+					autoHide: true,
+					autoHideDelay: 500,
+				}
+			);
+
+  		}
+
+
+  	let billAmount = $("#txttotal").text().replace(',','');
+
+  	let balanceAmount = billAmount - val;
+
+	$("#spnBalance").text(balanceAmount);
+  		
+  	}
 }

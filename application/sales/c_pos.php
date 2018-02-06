@@ -192,8 +192,8 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
 			$keys = $key['id_item'].'|'.$key['unit'];
 			$keys = base64_encode($keys);
 			$total = ($key['price'] - ($key['price'] * $key['discprc'] /100) ) * $key['qty'] ;
-			$data[$i]['price'] = '<a href="#" class="editparam" key="'.$keys.'"  datatitle="Harga Sale" dataparam="hargajual" val="'.number_format($key['price']).'">'.number_format($key['price']).'</a>';		
-			$data[$i]['qty'] = '<a href="#" class="editparam" key="'.$keys.'" datatitle="Qty" dataparam="qty" val="'.number_format($key['qty']).'">'.number_format($key['qty']).' '.$key['unit'].'</a>';
+			$data[$i]['price'] = number_format($key['price']);		
+			$data[$i]['qty'] = '<input type="text" onfocusout="editQtyParam(this)" key="'.$keys.'" datatitle="Qty" dataparam="qty" value="'.number_format($key['qty']).'"></input>';
 			$data[$i]['discprc'] = '<a href="#" class="editparam" key="'.$keys.'" datatitle="Discount" dataparam="disc" val="'.number_format($key['discprc'],2).'">'.number_format($key['discprc'],2).'</a>';
 
 			$data[$i]['subtotal'] = '<span class="csubtotal">'.number_format($total)."</span>";

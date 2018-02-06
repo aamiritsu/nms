@@ -103,11 +103,26 @@ include "../../library/check_access.php";
 					</div>
 				</div>
 				<div class="info-box" style="margin-top:15px;">
-					<span class="info-box-icon bg-yellow">Rp.</span>
+					<span class="info-box-icon bg-yellow">Tot:</span>
 					<div class="info-box-content">
-						<span class="info-box-number newbox" id="txttotal">0</span>
+						<span class="info-box-number newbox text-yellow" id="txttotal">0</span>
 					</div><!-- /.info-box-content -->
 				</div>
+				<div class="info-box" style="margin-top:5px;">
+					<span class="info-box-icon bg-green">Paid</span>
+					<div class="info-box-content">
+						<span class="info-box-number newbox pull-right" id="spnCashPaid">
+							<input type="number" class="form-control input-lg"  id="txtCashPaid"  onfocusout="calculateBalanceAgainstCashPaid()" value="0" />
+						</span>
+						</div><!-- /.info-box-content -->
+				</div>
+				<div class="info-box" style="margin-top:5px;">
+					<span class="info-box-icon bg-blue">Bal:</span>
+					<div class="info-box-content">
+						<span class="info-box-number newbox text-blue" id="spnBalance">0</span>
+					</div><!-- /.info-box-content -->
+				</div>
+
 				<div class="form-horizontal">
 					<div class="box-body">
 						<div class="form-group">
